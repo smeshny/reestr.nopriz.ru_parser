@@ -79,5 +79,50 @@ def get_companies_short_links(short_sro_number):
         session.commit()
 
 
+def parse_company_card(link):
+    r = requests.get(link)
+    data = r.text
+
+    soup = BeautifulSoup(data, features="html.parser")
+    ###
+    company_name = soup.find('td', text='Сокращенное наименование:')
+    company_name = company_name.next_sibling.next_element.next_element
+    ###
+    company_inn = soup.find('td', text='ИНН:')
+    company_inn = company_inn.next_sibling.next_element.next_element
+    ###
+    company_manager = soup.find('td', text='ФИО, осуществляющего функции '
+                                           'единоличного исполнительного '
+                                           'органа юридического лица и (или) '
+                                           'руководителя коллегиального '
+                                           'исполнительного органа '
+                                           'юридического лица:')
+    company_manager = company_manager.next_sibling.next_element.next_element
+    ###
+    company_address = soup.find(string=re.compile("Адрес местонахождения "
+                                                  "юридического лица:"))
+    company_address = company_address.next_element.next_element.next_element
+    ###
+    company_tel = soup.find('td', text='Номер контактного телефона:')
+    company_tel = company_tel.next_sibling.next_element.next_element
+    ###
+    sro_belongs = soup.find(string=re.compile("СРО:"))
+    sro_belongs = sro_belongs.next_element.next_element.next_element
+    sro_belongs = sro_belongs.rstrip().lstrip().rstrip()
+    ###
+    member_status = soup.find('td', text='Статус члена:')
+    member_status = member_status.next_sibling.next_element.next_element
+    member_status = member_status.lstrip().rstrip()
+
+    return {'company_name': company_name,
+            'company_inn': company_inn,
+            'company_manager': company_manager,
+            'company_address': company_address,
+            'company_tel': company_tel,
+            'sro_belongs': sro_belongs,
+            'member_status': member_status, }
+
+
 if __name__ == '__main__':
-    print(get_companies_short_links(344))
+    # print(get_companies_short_links(344))
+    print(parse_company_card('http://reestr.nopriz.ru/reestr/clients/344/members/6179466'))
