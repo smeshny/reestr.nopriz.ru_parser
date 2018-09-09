@@ -123,6 +123,25 @@ def parse_company_card(link):
             'member_status': member_status, }
 
 
+def parse_companies_cards_from_database_links():
+    for q in session.query(Companies).all():
+        if q.company_name == 'null':
+            c_card = parse_company_card(q.company_link)
+
+            q.company_name = c_card['company_name']
+            q.company_inn = c_card['company_inn']
+            q.company_manager = c_card['company_manager']
+            q.company_address = c_card['company_address']
+            q.company_tel = c_card['company_tel']
+            q.sro_belongs = c_card['sro_belongs']
+            q.member_status = c_card['member_status']
+
+            session.commit()
+        else:
+            continue
+
+
 if __name__ == '__main__':
     # print(get_companies_short_links(344))
-    print(parse_company_card('http://reestr.nopriz.ru/reestr/clients/344/members/6179466'))
+    # print(parse_company_card('http://reestr.nopriz.ru/reestr/clients/344/members/6179466'))
+    parse_companies_cards_from_database_links()
