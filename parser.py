@@ -97,11 +97,17 @@ def parse_company_card(link):
                                            'руководителя коллегиального '
                                            'исполнительного органа '
                                            'юридического лица:')
-    company_manager = company_manager.next_sibling.next_element.next_element
+    try:
+        company_manager = company_manager.next_sibling.next_element.next_element
+    except:
+        company_manager = 'Parsing_error'
     ###
     company_address = soup.find(string=re.compile("Адрес местонахождения "
                                                   "юридического лица:"))
-    company_address = company_address.next_element.next_element.next_element
+    try:
+        company_address = company_address.next_element.next_element.next_element
+    except:
+        company_address = 'Parsing_error'
     ###
     company_tel = soup.find('td', text='Номер контактного телефона:')
     company_tel = company_tel.next_sibling.next_element.next_element
