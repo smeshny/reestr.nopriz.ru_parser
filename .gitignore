@@ -1,6 +1,7 @@
 # mine
 database.sqlite
 garbage/
+config/
 
 # Created by https://www.gitignore.io/api/pycharm
 
