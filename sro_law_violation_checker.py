@@ -38,9 +38,11 @@ def send_email(msg):
 
 if __name__ == '__main__':
     while 1:
-        data = get_page_violation_block_content()
-        if data != get_page_violation_block_content():
+        page_data = get_page_violation_block_content()
+        print(f'sleeping from {datetime.datetime.now()}')
+        time.sleep(3600)
+
+        if page_data != get_page_violation_block_content():
             send_email(get_page_violation_block_content())
         else:
-            print(f'sleeping from {datetime.datetime.now()}')
-            time.sleep(3600)
+            continue
