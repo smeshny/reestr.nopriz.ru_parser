@@ -24,6 +24,16 @@ def get_page_violation_block_content():
     return page_content
 
 
+def get_page_data_nostroy():
+    r = requests.get('http://nostroy.ru/exluded-sro/')
+    data = r.text
+
+    soup = BeautifulSoup(data, features="html.parser")
+    dump = soup.find('section', {'class': 'content'})
+
+    return dump.text
+
+
 def send_email(msg):
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.ehlo()
