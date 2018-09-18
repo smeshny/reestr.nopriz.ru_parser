@@ -8,10 +8,10 @@ from bs4 import BeautifulSoup
 from config.config import GMAIL_USER, GMAIL_PASSWORD, RECIPIENTS
 
 
-def get_page_violation_block_content():
+def get_page_data_nopriz():
     r = requests.get('http://nopriz.ru/ndocs/narusheniya_sro/')
     data = r.text
-    # get page block:
+
     soup = BeautifulSoup(data, features="html.parser")
     dump = soup.find_all('div', {'class': 'info-name'})
     page_content = ''
@@ -41,18 +41,31 @@ def send_email(msg):
     server.login(GMAIL_USER, GMAIL_PASSWORD)
     server.sendmail(GMAIL_USER,
                     RECIPIENTS,
-                    ('Subject: Оповещение о нарушениях в проектных СРО'
+                    ('Subject: Оповещение о нарушениях в СРО'
                     '\r\n%s' % msg).encode('utf-8'))
     server.quit()
 
 
+def main():
+    nopriz_data = get_page_data_nopriz()
+    nostroy_data = get_page_data_nostroy()
+
+    print(f'sleeping from {datetime.datetime.now()}')
+    time.sleep(3600)
+
+    if nopriz_data != get_page_data_nopriz():
+        send_email('Обнаружено обновление в '
+                   'http://nopriz.ru/ndocs/narusheniya_sro/')
+    if nostroy_data != get_page_data_nostroy():
+        send_email('Обнаружено обновление в '
+                   'http://nostroy.ru/exluded-sro/')
+
+
 if __name__ == '__main__':
     while 1:
-        page_data = get_page_violation_block_content()
-        print(f'sleeping from {datetime.datetime.now()}')
-        time.sleep(3600)
-
-        if page_data != get_page_violation_block_content():
-            send_email(get_page_violation_block_content())
-        else:
+        try:
+            main()
+        except Exception as e:
+            print(e)
+            time.sleep(600)
             continue
