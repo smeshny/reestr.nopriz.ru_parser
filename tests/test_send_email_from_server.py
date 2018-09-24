@@ -1,3 +1,6 @@
+import sys
+sys.path.append('../')  # for import config.config
+
 import smtplib
 
 
