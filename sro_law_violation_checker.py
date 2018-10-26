@@ -2,6 +2,7 @@ import requests
 import smtplib
 import time
 import datetime
+import difflib
 
 from bs4 import BeautifulSoup
 
@@ -46,17 +47,32 @@ def send_email(msg):
     server.quit()
 
 
+def check_difference_between_pages(old_page, new_page):
+    diff = difflib.ndiff(old_page, new_page)
+    changes = [l for l in diff if l.startswith('+ ')]
+
+    if changes:
+        return ''.join(changes)
+    else:
+        return False
+
+
 def main():
     nopriz_data = get_page_data_nopriz()
     nostroy_data = get_page_data_nostroy()
 
     print(f'sleeping from {datetime.datetime.now()}')
-    time.sleep(3600)
+    time.sleep(1800)
 
-    if nopriz_data != get_page_data_nopriz():
-        send_email('Обнаружено обновление в http://nopriz.ru/ndocs/narusheniya_sro/')
-    if nostroy_data != get_page_data_nostroy():
-        send_email('Обнаружено обновление в http://nostroy.ru/exluded-sro/')
+    nopriz_changes = check_difference_between_pages(nopriz_data,
+                                                    get_page_data_nopriz())
+    nostroy_changes = check_difference_between_pages(nostroy_data,
+                                                     get_page_data_nostroy())
+
+    if nopriz_changes:
+        send_email('Обнаружено обновление в http://nopriz.ru/ndocs/narusheniya_sro/' + nopriz_changes)
+    if nostroy_changes:
+        send_email('Обнаружено обновление в http://nostroy.ru/exluded-sro/' + nostroy_changes)
 
 
 if __name__ == '__main__':
