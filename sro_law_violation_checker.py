@@ -54,11 +54,9 @@ def main():
     time.sleep(3600)
 
     if nopriz_data != get_page_data_nopriz():
-        send_email('Обнаружено обновление в '
-                   'http://nopriz.ru/ndocs/narusheniya_sro/')
+        send_email('Обнаружено обновление в http://nopriz.ru/ndocs/narusheniya_sro/')
     if nostroy_data != get_page_data_nostroy():
-        send_email('Обнаружено обновление в '
-                   'http://nostroy.ru/exluded-sro/')
+        send_email('Обнаружено обновление в http://nostroy.ru/exluded-sro/')
 
 
 if __name__ == '__main__':

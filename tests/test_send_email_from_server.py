@@ -14,9 +14,11 @@ def send_email(msg):
     server.login(GMAIL_USER, GMAIL_PASSWORD)
     server.sendmail(GMAIL_USER,
                     RECIPIENTS,
-                    ('Subject: Тестовое сообщение\r\n%s' % msg).encode('utf-8'))
+                    ('Subject: Оповещение о нарушениях в СРО'
+                    '\r\n%s' % msg).encode('utf-8'))
     server.quit()
 
 
 if __name__ == '__main__':
-    send_email('Проверка отправки почты с сервера')
+    send_email('''Обнаружено обновление в
+                   http://nopriz.ru/ndocs/narusheniya_sro/''')
