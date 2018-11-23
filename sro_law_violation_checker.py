@@ -72,9 +72,9 @@ def main():
                                                      get_page_data_nostroy())
 
     if nopriz_changes:
-        send_email('Обнаружено обновление в http://nopriz.ru/ndocs/narusheniya_sro/' + nopriz_changes)
+        send_email(f'''Обнаружено обновление в http://nopriz.ru/ndocs/narusheniya_sro/' + {nopriz_changes}''')
     if nostroy_changes:
-        send_email('Обнаружено обновление в http://nostroy.ru/exluded-sro/' + nostroy_changes)
+        send_email(f'''Обнаружено обновление в http://nostroy.ru/exluded-sro/' + {nostroy_changes}''')
 
 
 if __name__ == '__main__':
