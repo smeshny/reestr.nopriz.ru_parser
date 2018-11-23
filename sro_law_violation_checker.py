@@ -52,7 +52,9 @@ def check_difference_between_pages(old_page, new_page):
     changes = [l for l in diff if l.startswith('+ ')]
 
     if changes:
-        return ''.join(changes)
+        raw_data = ''.join(changes)
+        clean_data = raw_data.replace('+ ', '')
+        return clean_data
     else:
         return False
 
